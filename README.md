@@ -1,19 +1,21 @@
 # testless
 Shaded frameless test packages for each Databricks LTS runtime, other runtimes may be added, allows the full test suite to be tested against the correct shims
 
-This badly named (or is it?) mini project aims to use frameless test packages, bundle them for a given frameless release and run against each appropriate dbr.
+This badly named (or is it?) mini project aims to use frameless test packages, bundle them for a given frameless release and run against each appropriate DBR.
+
+NOTE!!! - frameless only publishes against particular oss versions, combinations are built in this project that are not supported by frameless (see below for why) and are named as unsupported for this reason.
 
 ## Version and Naming convention
 
-    testless_${framelessVersion}_${runtimeCompatVersion}_${sparkCompatVersion}_${scalaCompatVersion}
+    testless_${framelessVersion}_[supported|unsupported]_${runtimeCompatVersion}_${sparkCompatVersion}_${scalaCompatVersion}
 
 As such the test shade for 0.17 frameless 3.5.1 version against DBR 14.3 LTS would be:
 
-    testless_0.17-3.5.1_14.3.dbr_3.5_2.12
+    testless_0.17-3.5.1_supported_14.3.dbr_3.5_2.12
 
 However running the 0.17 frameless 3.3.4 version against 14.3 would be:
 
-    testless_0.17-3.3.4_14.3.dbr_3.5_2.12
+    testless_0.17-3.3.4_unsupported_14.3.dbr_3.5_2.12
 
 Version combinations anticipated (depends on [#300](https://github.com/typelevel/frameless/pull/800) being accepted) also include DBRs and OSS base versions that are not explicitly or even officially supported by the Frameless project.  If there is an interesting version combination missing please raise an issue.
 
@@ -31,12 +33,12 @@ Open a scala notebook and run the following command:
 
 If you are attempting to run some Frameless based code on a DBR and it doesn't work, you can run the official test suite against that DBR version. Frameless' test coverage is very high, so it's likely one of four outcomes:
 
-1. It's not a supported combination of base OSS and runtime
+1. It's not a supported combination of base OSS and runtime (typically has unsupported in the name)
 2. That DBR has an incompatible with OSS api change that Frameless uses
 3. The shim has a bug
 4. That version of oss/dbr behaves differently than Frameless expects.
 
-If you see errors in com.sparkutils.shim or org.apache.spark.sql.shim pacakges or ShimUtils then it's 3. and please raise a ticket there.  If it's a not yet released version of shim for that DBR runtime then again, please raise a ticket on shim.
+If you see errors in com.sparkutils.shim or org.apache.spark.sql.shim pacakges or ShimUtils then it's 3. and please raise a ticket there.  If it's a not yet released version of shim for that DBR runtime then again, please raise a ticket on shim.  If, however, you are testing a combination with differing base versions than frameless intended like (testless_0.17-3.3.4_unsupported_14.3.dbr_3.5_2.12) this is not a supported combination.  Sometimes although it's should be a supported combination the DBR may backport a fix which breaks compatibility (this has happened with the decimal precision changes in 10.4/11.3 etc) - these fall under 4 (although testless may be the fix for it).
 
 The 2nd class of issue is a really difficult one to solve and would require frameless to build directly against the compilation shims (like Quality does) - this is not ideal - please raise an issue on shim first even though it's possibly frameless related, there may be workarounds.
 
