@@ -7,11 +7,15 @@ This badly named (or is it?) mini project aims to use frameless test packages, b
 
     testless_${framelessVersion}_${runtimeCompatVersion}_${sparkCompatVersion}_${scalaCompatVersion}
 
-As such the test shade for 0.17 frameless against DBR 14.3 LTS would be:
+As such the test shade for 0.17 frameless 3.5.1 version against DBR 14.3 LTS would be:
 
-    testless_0.17_14.3.dbr_3.5_2.12
+    testless_0.17-3.5.1_14.3.dbr_3.5_2.12
 
-Version combinations anticipated (depends on [#300](https://github.com/typelevel/frameless/pull/800) being accepted) also include DBRs and OSS base versions that are not explicitly or even officially supported by the Frameless project.
+However running the 0.17 frameless 3.3.4 version against 14.3 would be:
+
+    testless_0.17-3.3.4_14.3.dbr_3.5_2.12
+
+Version combinations anticipated (depends on [#300](https://github.com/typelevel/frameless/pull/800) being accepted) also include DBRs and OSS base versions that are not explicitly or even officially supported by the Frameless project.  If there is an interesting version combination missing please raise an issue.
 
 ## How to run
 
