@@ -264,7 +264,7 @@
         <profile>
             <id>0.17.0-3.5.1</id>
             <properties>
-                <framelessVersion>0.16.0-50-d146f00-20240311T153222Z-SNAPSHOT</framelessVersion>
+                <framelessVersion>0.16.0-51-692475f-20240311T173531Z-SNAPSHOT</framelessVersion>
                 <framelessRuntime>0.17.0-3.5.1</framelessRuntime>
                 <framelessCompatVersion></framelessCompatVersion>
             </properties>
@@ -301,7 +301,7 @@
         <zeroAllocHashingVersion>0.15</zeroAllocHashingVersion>
         <scalaCrossPluginVersion>0.3.0</scalaCrossPluginVersion>
         <mavenShadePluginVersion>3.2.1</mavenShadePluginVersion>
-        <shimRuntimeVersion>0.0.1-RC2</shimRuntimeVersion>
+        <shimRuntimeVersion>0.0.1-RC3-SNAPSHOT</shimRuntimeVersion>
         <naked-local-fs-version>0.1.0</naked-local-fs-version>
 
 
@@ -613,6 +613,10 @@
                                 <relocation>
                                     <pattern>cats</pattern>
                                     <shadedPattern>testless.cats</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>shapeless</pattern>
+                                    <shadedPattern>testless.shapeless</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
