@@ -1,0 +1,684 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.sparkutils</groupId>
+    <artifactId>testless_${framelessRuntime}_${shimRuntime}_${sparkCompatVersion}_${scalaCompatVersion}</artifactId>
+
+    <version>0.0.1-SNAPSHOT</version>
+    <name>Frameless Test Pack</name>
+    <description>Packaged tests and shaded jar for deploying in Databricks, or similar to verify builds still run</description>
+    <url>https://sparkutils.github.io/frameless/</url>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>https://github.com/sparkutils/quality/blob/main/LICENSE</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Chris Twiner</name>
+        </developer>
+    </developers>
+    <scm>
+        <connection>scm:git:git://github.com/sparkutils/frameless.git</connection>
+        <developerConnection>scm:git:ssh://github.com:sparkutils/frameless.git</developerConnection>
+        <url>http://github.com/sparkutils/frameless/tree/master</url>
+    </scm>
+<!-- not tied to a parent pom as it should not be built first and may be split out into a separate project -->
+    <profiles>
+        <profile>
+            <id>scala_2.11</id>
+            <properties>
+                <scalaVersion>2.11.12</scalaVersion>
+                <scalaCompatVersion>2.11</scalaCompatVersion>
+            </properties>
+        </profile>
+        <profile>
+            <id>scala_2.12.10</id>
+            <properties>
+                <scalaVersion>2.12.15</scalaVersion>
+                <scalaCompatVersion>2.12</scalaCompatVersion>
+            </properties>
+        </profile>
+        <profile>
+            <id>scala_2.12.15</id> <!-- 3.2 10.4 onwards -->
+            <properties>
+                <scalaVersion>2.12.15</scalaVersion>
+                <scalaCompatVersion>2.12</scalaCompatVersion>
+            </properties>
+        </profile>
+        <profile>
+            <id>scala_2.12.18</id> <!-- 4 was built against this, seemingly dropped since Sep 23 -->
+            <properties>
+                <scalaVersion>2.12.18</scalaVersion>
+                <scalaCompatVersion>2.12</scalaCompatVersion>
+            </properties>
+        </profile>
+        <profile>
+            <id>scala_2.13.5</id><!-- from 3.2.0 onwards only -->
+            <properties>
+                <scalaVersion>2.13.5</scalaVersion>
+                <scalaCompatVersion>2.13</scalaCompatVersion>
+                <scalatestVersion>3.0.8</scalatestVersion>
+            </properties>
+        </profile>
+        <profile>
+            <id>scala_2.13.12</id><!-- from jdk 21 / 4 onwards only -->
+            <properties>
+                <scalaVersion>2.13.12</scalaVersion>
+                <scalaCompatVersion>2.13</scalaCompatVersion>
+                <scalatestVersion>3.0.8</scalatestVersion>
+            </properties>
+        </profile>
+        <profile>
+            <id>Spark2</id>
+            <properties>
+                <shimRuntime>2.4.0.oss</shimRuntime>
+                <sparkVersion>2.4.6</sparkVersion>
+                <sparkCompatVersion>2.4</sparkCompatVersion>
+                <jacksonVersion>2.9.9</jacksonVersion>
+                <guavaVersion>15.0</guavaVersion> <!-- databricks runtime version -->
+                <parserCombinatorVersion>1.1.2</parserCombinatorVersion> <!-- databricks runtime version -->
+                <refinedVersion>0.9.12</refinedVersion>
+            </properties>
+        </profile>
+        <profile>
+            <id>Spark3</id>
+            <properties>
+                <shimRuntime>3.0.0.oss</shimRuntime>
+                <sparkVersion>3.0.3</sparkVersion>
+                <sparkCompatVersion>3.0</sparkCompatVersion>
+                <jacksonVersion>2.12.1</jacksonVersion>
+                <guavaVersion>15.0</guavaVersion> <!-- databricks runtime version, actual spark is 16.0.1 -->
+                <refinedVersion>0.9.28</refinedVersion>
+            </properties>
+        </profile>
+        <profile>
+            <id>9.1.dbr</id>
+            <properties>
+                <shimRuntime>9.1.dbr</shimRuntime>
+                <sparkVersion>3.1.2</sparkVersion>
+                <sparkCompatVersion>3.1</sparkCompatVersion>
+                <jacksonVersion>2.12.1</jacksonVersion>
+                <guavaVersion>15.0</guavaVersion> <!-- databricks runtime version, actual spark is downgraded to 11, sipHash24, crc32 and adler32 missing -->
+                <refinedVersion>0.9.28</refinedVersion>
+            </properties>
+        </profile>
+        <profile>
+            <id>Spark313</id>
+            <properties>
+                <shimRuntime>3.1.3.oss</shimRuntime>
+                <sparkVersion>3.1.3</sparkVersion>
+                <sparkCompatVersion>3.1</sparkCompatVersion>
+                <jacksonVersion>2.12.1</jacksonVersion>
+                <guavaVersion>15.0</guavaVersion> <!-- databricks runtime version, actual spark is downgraded to 11, sipHash24, crc32 and adler32 missing -->
+                <refinedVersion>0.9.28</refinedVersion>
+            </properties>
+        </profile>
+        <profile>
+            <id>Spark32</id>
+            <properties>
+                <shimRuntime>3.2.0.oss</shimRuntime>
+                <sparkVersion>3.2.0</sparkVersion>
+                <sparkCompatVersion>3.2</sparkCompatVersion>
+                <jacksonVersion>2.12.1</jacksonVersion>
+                <guavaVersion>15.0</guavaVersion> <!-- databricks runtime version -->
+                <refinedVersion>0.9.28</refinedVersion>
+            </properties>
+        </profile>
+        <profile>
+            <id>Spark321</id>
+            <properties>
+                <shimRuntime>3.2.1.oss</shimRuntime>
+                <sparkVersion>3.2.1</sparkVersion>
+                <sparkCompatVersion>3.2</sparkCompatVersion>
+                <jacksonVersion>2.12.1</jacksonVersion> <!-- scalameter dependency is 2.9.10 so perf tests runs need to change it -->
+                <guavaVersion>15.0</guavaVersion> <!-- databricks runtime version -->
+                <refinedVersion>0.9.28</refinedVersion>
+            </properties>
+        </profile>
+        <profile>
+            <id>10.4.dbr</id>
+            <properties>
+                <shimRuntime>10.4.dbr</shimRuntime>
+                <sparkVersion>3.2.1</sparkVersion>
+                <sparkCompatVersion>3.2</sparkCompatVersion>
+                <jacksonVersion>2.12.1</jacksonVersion>
+                <guavaVersion>15.0</guavaVersion> <!-- databricks runtime version -->
+                <refinedVersion>0.9.28</refinedVersion>
+            </properties>
+        </profile>
+        <profile>
+            <id>Spark332</id>
+            <properties>
+                <shimRuntime>3.3.2.oss</shimRuntime>
+                <sparkVersion>3.3.2</sparkVersion>
+                <sparkCompatVersion>3.3</sparkCompatVersion>
+                <jacksonVersion>2.13.5</jacksonVersion> <!-- scalameter dependency is 2.9.10 so perf tests runs need to change it -->
+                <guavaVersion>15.0</guavaVersion> <!-- databricks runtime version -->
+                <refinedVersion>0.9.28</refinedVersion>
+            </properties>
+        </profile>
+        <profile>
+            <id>11.3.dbr</id>
+            <properties> <!-- also contains backports of 3.4 functionality -->
+                <shimRuntime>11.3.dbr</shimRuntime>
+                <sparkVersion>3.3.0</sparkVersion>
+                <sparkCompatVersion>3.3</sparkCompatVersion>
+                <jacksonVersion>2.12.1</jacksonVersion> <!-- scalameter dependency is 2.9.10 so perf tests runs need to change it -->
+                <guavaVersion>15.0</guavaVersion> <!-- databricks runtime version -->
+                <refinedVersion>0.9.28</refinedVersion>
+            </properties>
+        </profile>
+        <profile>
+            <id>Spark341</id>
+            <properties>
+                <shimRuntime>3.4.1.oss</shimRuntime>
+                <sparkVersion>3.4.1</sparkVersion>
+                <sparkCompatVersion>3.4</sparkCompatVersion>
+                <jacksonVersion>2.14.2</jacksonVersion> <!-- scalameter dependency is 2.9.10 so perf tests runs need to change it -->
+                <guavaVersion>15.0</guavaVersion> <!-- databricks runtime version -->
+                <refinedVersion>0.9.28</refinedVersion>
+            </properties>
+        </profile>
+        <profile>
+            <id>12.2.dbr</id>
+            <properties> <!-- also contains backports of 3.4 functionality -->
+                <shimRuntime>12.2.dbr</shimRuntime>
+                <sparkVersion>3.3.2</sparkVersion>
+                <sparkCompatVersion>3.3</sparkCompatVersion>
+                <jacksonVersion>2.12.1</jacksonVersion> <!-- scalameter dependency is 2.9.10 so perf tests runs need to change it -->
+                <guavaVersion>15.0</guavaVersion> <!-- databricks runtime version -->
+                <refinedVersion>0.9.28</refinedVersion>
+            </properties>
+        </profile>
+        <profile>
+            <id>13.1.dbr</id>
+            <properties> <!-- also contains backports of 3.5 functionality -->
+                <shimRuntime>13.1.dbr</shimRuntime>
+                <sparkVersion>3.4.1</sparkVersion>
+                <sparkCompatVersion>3.4</sparkCompatVersion>
+                <jacksonVersion>2.14.2</jacksonVersion> <!-- scalameter dependency is 2.9.10 so perf tests runs need to change it -->
+                <guavaVersion>15.0</guavaVersion> <!-- databricks runtime version -->
+                <refinedVersion>0.9.28</refinedVersion>
+            </properties>
+        </profile>
+        <profile>
+            <id>13.3.dbr</id>
+            <properties> <!-- also contains backports of 3.5 functionality -->
+                <shimRuntime>13.3.dbr</shimRuntime>
+                <sparkVersion>3.4.1</sparkVersion>
+                <sparkCompatVersion>3.4</sparkCompatVersion>
+                <jacksonVersion>2.14.2</jacksonVersion> <!-- scalameter dependency is 2.9.10 so perf tests runs need to change it -->
+                <guavaVersion>15.0</guavaVersion> <!-- databricks runtime version -->
+                <refinedVersion>0.9.28</refinedVersion>
+            </properties>
+        </profile>
+        <profile>
+            <id>Spark350</id>
+            <properties>
+                <shimRuntime>3.5.0.oss</shimRuntime>
+                <sparkVersion>3.5.0</sparkVersion>
+                <sparkCompatVersion>3.5</sparkCompatVersion>
+                <jacksonVersion>2.15.2</jacksonVersion> <!-- scalameter dependency is 2.9.10 so perf tests runs need to change it -->
+                <guavaVersion>15.0</guavaVersion> <!-- databricks runtime version -->
+                <refinedVersion>0.9.28</refinedVersion>
+            </properties>
+        </profile>
+        <profile>
+            <id>Spark4</id>
+            <properties>
+                <shimRuntime>4.0.0.oss</shimRuntime>
+                <sparkVersion>4.0.0-SNAPSHOT</sparkVersion>
+                <sparkCompatVersion>4.0</sparkCompatVersion>
+                <jacksonVersion>2.15.2</jacksonVersion> <!-- scalameter dependency is 2.9.10 so perf tests runs need to change it -->
+                <guavaVersion>15.0</guavaVersion> <!-- databricks runtime version -->
+                <refinedVersion>0.9.28</refinedVersion>
+            </properties>
+        </profile>
+        <profile>
+            <id>14.0.dbr</id>
+            <properties>
+                <shimRuntime>14.0.dbr</shimRuntime>
+                <sparkVersion>3.5.0</sparkVersion>
+                <sparkCompatVersion>3.5</sparkCompatVersion>
+                <jacksonVersion>2.14.2</jacksonVersion> <!-- scalameter dependency is 2.9.10 so perf tests runs need to change it -->
+                <guavaVersion>15.0</guavaVersion> <!-- databricks runtime version -->
+                <refinedVersion>0.9.28</refinedVersion>
+            </properties>
+        </profile>
+        <profile>
+            <id>14.3.dbr</id>
+            <properties>
+                <shimRuntime>14.3.dbr</shimRuntime>
+                <sparkVersion>3.5.0</sparkVersion>
+                <sparkCompatVersion>3.5</sparkCompatVersion>
+                <jacksonVersion>2.14.2</jacksonVersion> <!-- scalameter dependency is 2.9.10 so perf tests runs need to change it -->
+                <guavaVersion>15.0</guavaVersion> <!-- databricks runtime version -->
+                <refinedVersion>0.9.28</refinedVersion>
+            </properties>
+        </profile>
+
+        <!-- frameless -->
+        <profile>
+            <id>0.17.0-3.5.1</id>
+            <properties>
+                <framelessVersion>0.16.0-50-d146f00-20240311T153222Z-SNAPSHOT</framelessVersion>
+                <framelessRuntime>0.17.0-3.5.1</framelessRuntime>
+                <framelessCompatVersion></framelessCompatVersion>
+            </properties>
+        </profile>
+    </profiles>
+
+    <properties>
+        <mavenFlattenPluginVersion>1.2.7</mavenFlattenPluginVersion>
+        <mavenProjectInfoReportsPluginVersion>3.1.1</mavenProjectInfoReportsPluginVersion>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <shapelessVersion>2.3.2</shapelessVersion>
+        <scalaMeterVersion>0.19</scalaMeterVersion>
+        <httpClientVersion>4.5.8</httpClientVersion>
+        <dbutilsVersion>0.0.3</dbutilsVersion>
+        <apacheCommons>3.5</apacheCommons>
+        <junitVersion>4.12</junitVersion>
+        <deltaCoreVersion>0.5.0</deltaCoreVersion>
+        <dependencyPluginVersion>3.1.1</dependencyPluginVersion>
+        <scalaCompilerPluginVersion>4.8.0</scalaCompilerPluginVersion>
+        <mavenCompilerPluginVersion>3.8.1</mavenCompilerPluginVersion>
+        <mavenJarPluginVersion>3.2.0</mavenJarPluginVersion>
+        <mavenShadePluginVersion>3.2.1</mavenShadePluginVersion>
+        <mavenSitePluginVersion>3.7.1</mavenSitePluginVersion>
+        <mavenProjectInfoReportsVersion>3.0.0</mavenProjectInfoReportsVersion>
+        <surefirePluginVersion>2.22.2</surefirePluginVersion>
+        <surefireReportPluginVersion>2.22.2</surefireReportPluginVersion>
+        <jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
+        <scoverage.plugin.version>1.4.0</scoverage.plugin.version>
+        <mavenAssemblyPluginVersion>2.5.3</mavenAssemblyPluginVersion>
+        <deequ.version>1.0.2</deequ.version>
+        <circeVersion>0.11.2</circeVersion>
+        <rngVersion>1.3</rngVersion>
+        <zeroAllocHashingVersion>0.15</zeroAllocHashingVersion>
+        <scalaCrossPluginVersion>0.3.0</scalaCrossPluginVersion>
+        <mavenShadePluginVersion>3.2.1</mavenShadePluginVersion>
+        <shimRuntimeVersion>0.0.1-RC2</shimRuntimeVersion>
+        <naked-local-fs-version>0.1.0</naked-local-fs-version>
+
+
+        <scalatestVersion>3.2.18</scalatestVersion>
+        <scalatestPlusVersion>3.1.0.0-RC2</scalatestPlusVersion>
+        <scalaCheckVersion>1.17.0</scalaCheckVersion>
+        <scalacheckEffectVersion>1.0.4</scalacheckEffectVersion>
+        <scalacticVersion>3.2.18</scalacticVersion>
+    </properties>
+<!--
+    <repositories>
+        <repository>
+            <id>mvn_snapshots</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+    </repositories>
+-->
+    <distributionManagement>
+        <repository>
+            <id>ossrh</id>
+            <name>Quality Release Repository</name>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <name>Quality Snapshot Repository</name>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <dependencies>
+<!-- -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guavaVersion}</version>
+            <!-- has to be compile for testing locally --> <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-sql_${scalaCompatVersion}</artifactId>
+            <version>${sparkVersion}</version>
+            <!-- has to be compile for testing locally --><scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.globalmentor</groupId>
+            <artifactId>hadoop-bare-naked-local-fs</artifactId>
+            <version>${naked-local-fs-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sparkutils</groupId>
+            <artifactId>shim_runtime_${shimRuntime}_${sparkCompatVersion}_${scalaCompatVersion}</artifactId>
+            <version>${shimRuntimeVersion}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.typelevel</groupId>
+            <artifactId>frameless-core_${scalaCompatVersion}</artifactId>
+            <version>${framelessVersion}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sparkutils</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.typelevel</groupId>
+            <artifactId>frameless-dataset${framelessCompatVersion}_${scalaCompatVersion}</artifactId>
+            <version>${framelessVersion}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sparkutils</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.typelevel</groupId>
+            <artifactId>frameless-ml${framelessCompatVersion}_${scalaCompatVersion}</artifactId>
+            <version>${framelessVersion}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sparkutils</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.typelevel</groupId>
+            <artifactId>frameless-cats${framelessCompatVersion}_${scalaCompatVersion}</artifactId>
+            <version>${framelessVersion}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sparkutils</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.typelevel</groupId>
+            <artifactId>frameless-core_${scalaCompatVersion}</artifactId>
+            <version>${framelessVersion}</version>
+            <classifier>tests</classifier>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sparkutils</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.typelevel</groupId>
+            <artifactId>frameless-dataset${framelessCompatVersion}_${scalaCompatVersion}</artifactId>
+            <version>${framelessVersion}</version>
+            <classifier>tests</classifier>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sparkutils</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.typelevel</groupId>
+            <artifactId>frameless-ml${framelessCompatVersion}_${scalaCompatVersion}</artifactId>
+            <version>${framelessVersion}</version>
+            <classifier>tests</classifier>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sparkutils</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.typelevel</groupId>
+            <artifactId>frameless-cats${framelessCompatVersion}_${scalaCompatVersion}</artifactId>
+            <version>${framelessVersion}</version>
+            <classifier>tests</classifier>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sparkutils</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- frameless test dependencies -->
+        <dependency>
+            <groupId>org.scalatest</groupId>
+            <artifactId>scalatest_${scalaCompatVersion}</artifactId>
+            <version>${scalatestVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.scalatest</groupId>
+            <artifactId>scalatest-shouldmatchers_${scalaCompatVersion}</artifactId>
+            <version>${scalatestVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.scalatestplus</groupId>
+            <artifactId>scalatestplus-scalacheck_${scalaCompatVersion}</artifactId>
+            <version>${scalatestPlusVersion}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.scalacheck</groupId>
+            <artifactId>scalacheck_${scalaCompatVersion}</artifactId>
+            <version>${scalaCheckVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.typelevel</groupId>
+            <artifactId>scalacheck-effect_2.12</artifactId>
+            <version>${scalacheckEffectVersion}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.scalactic</groupId>
+            <artifactId>scalactic_${scalaCompatVersion}</artifactId>
+            <version>${scalacticVersion}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${mavenCompilerPluginVersion}</version>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${mavenJarPluginVersion}</version>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Build-Time>${maven.build.timestamp}</Build-Time>
+                        </manifestEntries>
+                        <manifestSections>
+                            <manifestSection>
+                                <name>Versions</name>
+                                <manifestEntries>
+                                    <Project-Version>${project.version}</Project-Version>
+                                    <Project-Git-Hash>${GITHUB_SHA}</Project-Git-Hash>
+                                    <Project-CI-Branch>${GITHUB_BASE_REF}</Project-CI-Branch>
+                                    <Project-CI-Run-ID>${GITHUB_RUN_ID}</Project-CI-Run-ID>
+                                    <Project-URL>${GITHUB_REPOSITORY}</Project-URL>
+                                </manifestEntries>
+                            </manifestSection>
+                        </manifestSections>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>${mavenFlattenPluginVersion}</version>
+                <configuration>
+                    <flattenMode>oss</flattenMode>
+                </configuration>
+                <executions>
+                    <!-- enable flattening -->
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <!-- ensure proper cleanup -->
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>${mavenShadePluginVersion}</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <!-- does not work <minimizeJar>true</minimizeJar> -->
+                            <artifactSet>
+                                <includes>
+                                    <include>com.sparkutils:*</include>
+                                    <!-- --> <include>junit:*</include>
+                                    <include>org.scalatest:*</include>
+                                    <include>com.storm-enroute:*</include>
+                                    <include>org.hamcrest:*</include>
+                                    <include>com.chuusai:*</include>
+                                    <include>org.typelevel:*</include>
+                                    <include>org.apache.commons:*</include>
+                                    <include>net.openhft:*</include>
+                                    <include>org.scalactic:*</include>
+                                    <include>org.scalatestplus:*</include>
+                                    <include>org.scalacheck:*</include>
+                                    <include>com.globalmentor:*</include>
+                                </includes>
+                                <excludes>
+                                    <exclude>com.databricks:*</exclude>
+                                    <exclude>io.delta:*</exclude>
+                                    <exclude>com.fasterxml.jackson.module:*</exclude>
+                                    <exclude>com.fasterxml.jackson.core:*</exclude>
+                                    <exclude>org.apache.spark:*</exclude>
+                                    <exclude>org.scala-lang:*</exclude>
+                                    <exclude>log4j:log4j:jar:</exclude>
+                                </excludes>
+                            </artifactSet>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <relocations>
+                                <relocation>
+                                    <pattern>org.scalatest</pattern>
+                                    <shadedPattern>testless.org.scalatest</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.scalactic</pattern>
+                                    <shadedPattern>testless.org.scalactic</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.scalacheck</pattern>
+                                    <shadedPattern>testless.org.scalacheck</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>cats</pattern>
+                                    <shadedPattern>testless.cats</shadedPattern>
+                                </relocation>
+                            </relocations>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Prevent gpg from using pinentry programs -->
+                            <gpgArguments>
+                                <arg>--pinentry-mode</arg>
+                                <arg>loopback</arg>
+                            </gpgArguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.13</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                    <stagingProgressTimeoutMinutes>15</stagingProgressTimeoutMinutes>
+                </configuration>
+            </plugin>
+        </plugins>
+
+    </build>
+</project>

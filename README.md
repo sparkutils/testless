@@ -1,4 +1,5 @@
 # testless
+
 Shaded frameless test packages for each Databricks LTS runtime, other runtimes may be added, allows the full test suite to be tested against the correct shims
 
 This badly named (or is it?) mini project aims to use frameless test packages, bundle them for a given frameless release and run against each appropriate DBR.
@@ -11,11 +12,11 @@ NOTE!!! - frameless only publishes against particular oss versions, combinations
 
 As such the test shade for 0.17 frameless 3.5.1 version against DBR 14.3 LTS would be:
 
-    testless_0.17-3.5.1_supported_14.3.dbr_3.5_2.12
+    testless_0.17.0-3.5.1_supported_14.3.dbr_3.5_2.12
 
 However running the 0.17 frameless 3.3.4 version against 14.3 would be:
 
-    testless_0.17-3.3.4_unsupported_14.3.dbr_3.5_2.12
+    testless_0.17.0-3.3.4_unsupported_14.3.dbr_3.5_2.12
 
 Version combinations anticipated (depends on [#300](https://github.com/typelevel/frameless/pull/800) being accepted) also include DBRs and OSS base versions that are not explicitly or even officially supported by the Frameless project.  If there is an interesting version combination missing please raise an issue.
 
@@ -26,12 +27,32 @@ Ensure the only jar added for a runtime is testless - you can use the databricks
 Open a scala notebook and run the following command:
 
 ```scala
-//pending....
+frameless.setOutputDir("testoutputPath")
+// optionally pass additional scalatest params
+com.sparkutils.testless.Testless.testFrameless()
 ```
+
+On Databricks a usable path might be: /dbfs/databricks/testless 
+
+All detected frameless test suites will be run with the summary (as of 11.03 against testless_0.17.0-3.5.1_14.3.dbr_3.5_2.12-0.0.1-SNAPSHOT):
+
+```
+Run completed in 47 minutes, 0 seconds.
+Total number of tests run: 450
+Suites: completed 85, aborted 0
+Tests: succeeded 448, failed 2, canceled 0, ignored 0, pending 0
+*** 2 TESTS FAILED ***
+```
+
+If there are class cast or classnotfounds's etc. please raise an issue describing the target platform and full testless jar name used.  It's more than possible some test scope jar is missing for that combination.
+
+### Extra Args or a single test
+
+Use runFramelessTestName with a single fqn test name or testFrameless(String[]) with additional args and all tests.  Or replace all the running args (not advised as it will attempt gui usage) with scalaTestRunner. 
 
 ## Why do this?
 
-If you are attempting to run some Frameless based code on a DBR and it doesn't work, you can run the official test suite against that DBR version. Frameless' test coverage is very high, so it's likely one of four outcomes:
+If you are attempting to run some Frameless based code on a DBR and it doesn't work, you can run the official test suite against that DBR version (or indeed in advance). Frameless' test coverage is very high, so it's likely one of four outcomes:
 
 1. It's not a supported combination of base OSS and runtime (typically has unsupported in the name)
 2. That DBR has an incompatible with OSS api change that Frameless uses
@@ -44,3 +65,6 @@ The 2nd class of issue is a really difficult one to solve and would require fram
 
 If it's really not 1-3 then raising a ticket on frameless is worthwhile but please mention the exact version of testless and the DBR runtime you tested against in your issue.
 
+## How can I add a new runtime?
+
+First make sure shim supports that runtime, raise an issue/PR etc. to help that, then raise one here to use that shim.
