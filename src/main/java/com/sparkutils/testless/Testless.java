@@ -13,7 +13,7 @@ public class Testless {
 
     public static void testFrameless(String[] args) throws IOException {
         ArrayList<String> oargs = new ArrayList<String>();
-        oargs.add("-oWDT");
+        oargs.add("-oWDFT");
         for (int i = 0; i < args.length; i++) {
             oargs.add(args[i]);
         }
@@ -39,7 +39,7 @@ public class Testless {
 
     public static void runFramelessTestName(String testName) throws IOException {
         ArrayList<String> oargs = new ArrayList<String>();
-        oargs.add("-oWDT");
+        oargs.add("-oWDFT");
 
         oargs.add("-s");
         oargs.add(testName);
