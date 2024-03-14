@@ -273,7 +273,7 @@
             <id>0.17.0-3.4.2</id>
             <properties>
                 <framelessVersion>0.16.0-52-1008b85-20240312T184633Z-SNAPSHOT</framelessVersion>
-                <framelessRuntime>0.17.0-3.4.1</framelessRuntime>
+                <framelessRuntime>0.17.0-3.4.2</framelessRuntime>
                 <framelessCompatVersion>-spark34</framelessCompatVersion>
             </properties>
         </profile>
