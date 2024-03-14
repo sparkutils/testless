@@ -24,7 +24,7 @@ Version combinations anticipated (depends on [#300](https://github.com/typelevel
 
 Ensure the only jar added for a runtime is testless - you can use the databricks community edition to test this as well.  If it's not the only jar, don't raise a ticket if something goes wrong (it's shaded but...).
 
-Open a scala notebook and run the following command:
+Start a correct runtime, ensure that the jar has loaded before running, open the Driver Logs tab on Databricks, then open a scala notebook attached to the correct DBR runtime and run the following command:
 
 ```scala
 frameless.setOutputDir("testoutputPath")
@@ -34,17 +34,21 @@ com.sparkutils.testless.Testless.testFrameless()
 
 On Databricks a usable path might be: /dbfs/databricks/testless 
 
-All detected frameless test suites will be run with the summary (as of 11.03 against testless_0.17.0-3.5.1_14.3.dbr_3.5_2.12-0.0.1-SNAPSHOT):
+All detected frameless test suites will be run with the summary (as of 14.03 against testless_0.17.0-3.5.1_14.3.dbr_3.5_2.12-0.0.1-SNAPSHOT):
 
 ```
-Run completed in 47 minutes, 0 seconds.
+Run completed in 47 minutes, 53 seconds.
 Total number of tests run: 450
 Suites: completed 85, aborted 0
-Tests: succeeded 448, failed 2, canceled 0, ignored 0, pending 0
-*** 2 TESTS FAILED ***
+Tests: succeeded 450, failed 0, canceled 0, ignored 0, pending 0
+All tests passed.
 ```
 
 If there are class cast or classnotfounds's etc. please raise an issue describing the target platform and full testless jar name used.  It's more than possible some test scope jar is missing for that combination.
+
+### On Databricks it dies after tests so I can't see logs in the cell
+
+This is why the Driver logs should be open, after the job dies and the driver node restarts you can download the stdout to look for the passes.
 
 ### Extra Args or a single test
 
@@ -81,13 +85,17 @@ If you get different results please raise a PR to update the Tested Combos table
 
 ## Tested Combos
 
-Each test run takes about 45 minutes on Databricks community edition, as such a differentiation is made between tested by testless commiters and community provided. 
+**NOTE:**  Please ensure an appropriate version combination is used in your applications.  Some of these combinations **cannot** be recommended for use even if the tests pass, for example using base oss build which is different to that of a DBR, known to be worrisome combos will have something in the Notes column.  Good test results are for information only and do not represent "support" from the frameless community.      
 
-**NOTE:**  Please ensure an appropriate version combination is used in your applications.  Some of these combinations **cannot** be recommended for use.  Good test results are for information only and do not represent "support" from the frameless community.      
+| Version                                                | Minimum Shim Version | Runtime Tested Against | Test Results                                | Run By       | Run On   | Notes                                                                                                                                                       |
+|--------------------------------------------------------|----------------------|------------------------|---------------------------------------------|--------------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| testless_0.17.0-3.5.1_14.3.dbr_3.5_2.12-0.0.1-SNAPSHOT | 0.0.1-RC3            | Databricks 14.3 LTS    | All tests passed                            | chris-twiner | 14.03.24 |                                                                                                                                                             |
+| testless_0.17.0-3.5.1_14.0.dbr_3.5_2.12-0.0.1-SNAPSHOT | 0.0.1-RC3            | Databricks 14.1        | All tests passed                            | chris-twiner | 14.03.24 | Prefer 14.3 LTS                                                                                                                                             |
+| testless_0.17.0-3.4.2_13.3.dbr_3.4_2.12-0.0.1-SNAPSHOT | 0.0.1-RC3            | Databricks 13.3 LTS    | All tests passed                            | chris-twiner | 14.03.24 |                                                                                                                                                             |
+| testless_0.17.0-3.3.2_12.2.dbr_3.3_2.12-0.0.1-SNAPSHOT | 0.0.1-RC4            | Databricks 12.2 LTS    | All tests passed                            | chris-twiner | 14.03.24 | MapGroups implementation is back-ported from 3.4 - so 0.0.1-RC-3 shim doesn't work.                                                                         |
+| testless_0.17.0-3.3.2_11.3.dbr_3.3_2.12-0.0.1-SNAPSHOT | 0.0.1-RC3            | Databricks 11.3 LTS    | All tests passed                            | chris-twiner | 14.03.24 | Same major/minor as 12.2. Prefer 12.2 LTS.                                                                                                                  |
+| testless_0.17.0-3.3.2_10.4.dbr_3.3_2.12-0.0.1-SNAPSHOT | 0.0.1-RC3            | Databricks 10.4 LTS    | All but Lit predicate pushdown tests passed | chris-twiner | 14.03.24 | Not recommended due to major/minor mismatch (3.3.0 vs 3.2.1) - caveat emptor.  Lit predicate pushdown is not possible on this Spark base version            |
+| testless_0.17.0-3.3.2_9.1.dbr_3.3_2.12-0.0.1-SNAPSHOT  | 0.0.1-RC3            | Databricks 9.1 LTS     | All but Lit predicate pushdown tests passed | chris-twiner | 14.03.24 | Not recommended due to EOL and major/minor mismatch (3.3.0 vs 3.1.2) - caveat emptor.  Lit predicate pushdown is not possible on this Spark base version |
+| testless_0.17.0-3.5.1_9.1.dbr_3.5_2.12-0.0.1-SNAPSHOT  | 0.0.1-RC3            | Databricks 9.1 LTS     | All but Lit predicate pushdown tests passed | chris-twiner | 14.03.24 | DO NOT USE, this is only tested for proof of enough shimming - 3.1.2 vs 3.4 is worlds apart                                                                 |
 
-| Version                                                | Shim Version | Runtime Tested Against | Test Results      | Run By       | Run On   | Notes           |
-|--------------------------------------------------------|--------------|------------------------|-------------------|--------------|----------|-----------------|
-| testless_0.17.0-3.5.1_14.3.dbr_3.5_2.12-0.0.1-SNAPSHOT | 0.0.1-RC3    | Databricks 14.3 LTS    | All tests passed                  | chris-twiner | 14.03.24 |                 |
-| testless_0.17.0-3.5.1_14.0.dbr_3.5_2.12-0.0.1-SNAPSHOT | 0.0.1-RC3    | Databricks 14.1        | All tests passed       | chris-twiner | 14.03.24 | Prefer 14.3 LTS |
-| testless_0.17.0-3.4.2_13.3.dbr_3.4_2.12-0.0.1-SNAPSHOT | 0.0.1-RC3    | Databricks 13.3 LTS    | All tests passed       | chris-twiner | 14.03.24 |  |
 
