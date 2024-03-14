@@ -35,6 +35,7 @@ public class Testless {
         String[] joined = new String[oargs.size()];
         oargs.<String>toArray(joined);
         org.scalatest.tools.Runner.run(joined);
+        System.out.println("testless finished properly");
     }
 
     public static void runFramelessTestName(String testName) throws IOException {
@@ -47,6 +48,7 @@ public class Testless {
         String[] joined = new String[oargs.size()];
         oargs.<String>toArray(joined);
         org.scalatest.tools.Runner.run(joined);
+        System.out.println("testless finished properly");
     }
 
     public static void testFrameless() throws IOException {
