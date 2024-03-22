@@ -46,6 +46,10 @@ public class Testless {
 
         Iterator<String> classargItr = classargs.iterator();
 
+        for (int j = 0; j < (batchStartingNumber * argsPerBatch) && classargItr.hasNext(); j++) {
+            classargItr.next();
+        }
+
         for (int i = batchStartingNumber; i < numberOfBatches; i++) {
             System.out.println("testless - starting batch "+i);
             String[] joined = new String[oargs.size() + argsPerBatch];
