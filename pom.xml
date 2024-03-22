@@ -264,7 +264,7 @@
         <profile>
             <id>0.17.0-3.5.1</id>
             <properties>
-                <framelessVersion>0.16.0-56-b161067-SNAPSHOT</framelessVersion>
+                <framelessVersion>0.16.0-78-b880261-SNAPSHOT</framelessVersion>
                 <framelessRuntime>0.17.0-3.5.1</framelessRuntime>
                 <framelessCompatVersion></framelessCompatVersion>
             </properties>
@@ -272,7 +272,7 @@
         <profile>
             <id>0.17.0-3.4.2</id>
             <properties>
-                <framelessVersion>0.16.0-56-b161067-SNAPSHOT</framelessVersion>
+                <framelessVersion>0.16.0-78-b880261-SNAPSHOT</framelessVersion>
                 <framelessRuntime>0.17.0-3.4.2</framelessRuntime>
                 <framelessCompatVersion>-spark34</framelessCompatVersion>
             </properties>
@@ -280,7 +280,7 @@
         <profile>
             <id>0.17.0-3.3.4</id>
             <properties>
-                <framelessVersion>0.16.0-56-b161067-SNAPSHOT</framelessVersion>
+                <framelessVersion>0.16.0-78-b880261-SNAPSHOT</framelessVersion>
                 <framelessRuntime>0.17.0-3.3.2</framelessRuntime>
                 <framelessCompatVersion>-spark33</framelessCompatVersion>
             </properties>
