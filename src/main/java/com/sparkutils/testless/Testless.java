@@ -58,7 +58,9 @@ public class Testless {
                 joined[oargs.size() + j] = classargItr.next();
             }
             org.scalatest.tools.Runner.run(joined);
-            System.out.println("testless - finishing batch "+i);
+            System.out.println("testless - gc'ing after finishing batch "+i);
+            System.gc();
+            System.gc();
         }
         System.out.println("all testless batches completed");
     }
