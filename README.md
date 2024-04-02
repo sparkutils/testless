@@ -8,17 +8,13 @@ NOTE!!! - frameless only publishes against particular oss versions, combinations
 
 ## Version and Naming convention
 
-    testless_${framelessVersion}_[supported|unsupported]_${runtimeCompatVersion}_${sparkCompatVersion}_${scalaCompatVersion}
+    testless_${framelessVersion}_${runtimeCompatVersion}_${sparkCompatVersion}_${scalaCompatVersion}
 
 As such the test shade for 0.17 frameless 3.5.1 version against DBR 14.3 LTS would be:
 
-    testless_0.17.0-3.5.1_supported_14.3.dbr_3.5_2.12
+    testless_0.17.0-3.5.1_14.3.dbr_3.5_2.12
 
-However running the 0.17 frameless 3.3.4 version against 14.3 would be:
-
-    testless_0.17.0-3.3.4_unsupported_14.3.dbr_3.5_2.12
-
-Version combinations anticipated (depends on [#300](https://github.com/typelevel/frameless/pull/800) being accepted) also include DBRs and OSS base versions that are not explicitly or even officially supported by the Frameless project.  If there is an interesting version combination missing please raise an issue.
+Version combinations anticipated (depends on [#800](https://github.com/typelevel/frameless/pull/800) being accepted) also include DBRs and OSS base versions that are not explicitly or even officially supported by the Frameless project.  If there is an interesting version combination missing please raise an issue.
 
 ## How to run
 
