@@ -266,6 +266,7 @@
             <properties>
                 <framelessVersion>0.16.0-78-b880261-SNAPSHOT</framelessVersion>
                 <framelessRuntime>0.17.0-3.5.1</framelessRuntime>
+                <framelessOrg>org.typelevel</framelessOrg>
                 <framelessCompatVersion></framelessCompatVersion>
             </properties>
         </profile>
@@ -274,6 +275,7 @@
             <properties>
                 <framelessVersion>0.16.0-78-b880261-SNAPSHOT</framelessVersion>
                 <framelessRuntime>0.17.0-3.4.2</framelessRuntime>
+                <framelessOrg>org.typelevel</framelessOrg>
                 <framelessCompatVersion>-spark34</framelessCompatVersion>
             </properties>
         </profile>
@@ -282,7 +284,18 @@
             <properties>
                 <framelessVersion>0.16.0-78-b880261-SNAPSHOT</framelessVersion>
                 <framelessRuntime>0.17.0-3.3.2</framelessRuntime>
+                <framelessOrg>org.typelevel</framelessOrg>
                 <framelessCompatVersion>-spark33</framelessCompatVersion>
+            </properties>
+        </profile>
+        <profile>
+            <id>sparkutils-0.17.0-3.5</id>
+            <properties>
+                <framelessVersion>0.17.0-SNAPSHOT</framelessVersion>
+                <framelessRuntime>sparkutils_0.17.0-3.5</framelessRuntime>
+                <framelessOrg>com.sparkutils</framelessOrg>
+                <framelessCompatVersion>_3.5</framelessCompatVersion>
+                <framelessCoreCompatVersion>_3.5</framelessCoreCompatVersion>
             </properties>
         </profile>
     </profiles>
@@ -326,6 +339,8 @@
         <scalaCheckVersion>1.17.0</scalaCheckVersion>
         <scalacheckEffectVersion>1.0.4</scalacheckEffectVersion>
         <scalacticVersion>3.2.18</scalacticVersion>
+
+        <framelessCoreCompatVersion></framelessCoreCompatVersion>
     </properties>
 <!--
     <repositories>
@@ -375,8 +390,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.typelevel</groupId>
-            <artifactId>frameless-core_${scalaCompatVersion}</artifactId>
+            <groupId>${framelessOrg}</groupId>
+            <artifactId>frameless-core${framelessCoreCompatVersion}_${scalaCompatVersion}</artifactId>
             <version>${framelessVersion}</version>
             <exclusions>
                 <exclusion>
@@ -386,7 +401,7 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.typelevel</groupId>
+            <groupId>${framelessOrg}</groupId>
             <artifactId>frameless-dataset${framelessCompatVersion}_${scalaCompatVersion}</artifactId>
             <version>${framelessVersion}</version>
             <exclusions>
@@ -397,7 +412,7 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.typelevel</groupId>
+            <groupId>${framelessOrg}</groupId>
             <artifactId>frameless-ml${framelessCompatVersion}_${scalaCompatVersion}</artifactId>
             <version>${framelessVersion}</version>
             <exclusions>
@@ -408,7 +423,7 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.typelevel</groupId>
+            <groupId>${framelessOrg}</groupId>
             <artifactId>frameless-cats${framelessCompatVersion}_${scalaCompatVersion}</artifactId>
             <version>${framelessVersion}</version>
             <exclusions>
@@ -420,8 +435,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.typelevel</groupId>
-            <artifactId>frameless-core_${scalaCompatVersion}</artifactId>
+            <groupId>${framelessOrg}</groupId>
+            <artifactId>frameless-core${framelessCoreCompatVersion}_${scalaCompatVersion}</artifactId>
             <version>${framelessVersion}</version>
             <classifier>tests</classifier>
             <exclusions>
@@ -432,7 +447,7 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.typelevel</groupId>
+            <groupId>${framelessOrg}</groupId>
             <artifactId>frameless-dataset${framelessCompatVersion}_${scalaCompatVersion}</artifactId>
             <version>${framelessVersion}</version>
             <classifier>tests</classifier>
@@ -444,7 +459,7 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.typelevel</groupId>
+            <groupId>${framelessOrg}</groupId>
             <artifactId>frameless-ml${framelessCompatVersion}_${scalaCompatVersion}</artifactId>
             <version>${framelessVersion}</version>
             <classifier>tests</classifier>
@@ -456,7 +471,7 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.typelevel</groupId>
+            <groupId>${framelessOrg}</groupId>
             <artifactId>frameless-cats${framelessCompatVersion}_${scalaCompatVersion}</artifactId>
             <version>${framelessVersion}</version>
             <classifier>tests</classifier>
