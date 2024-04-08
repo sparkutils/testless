@@ -1,0 +1,105 @@
+# Full build setup off main, with ~docsOnly commit filter to run just mvn_site then docs.
+name: Default CI
+
+on:
+  push:
+    branches: [ "main", "temp/*" ]
+  pull_request:
+    branches: [ "main", "temp/*" ]
+
+env:
+  MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
+  MAVEN_CLI_TESTSHADES_OPTS: "-f testShades/pom.xml --batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
+  # -Dmaven.repo.local=.m2/repository not needed on github, seems ~/.m2 is supported / expected
+  MAVEN_OPTS: "-Xms1g -Xmx4g -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.http.retryHandler.class=standard -Dmaven.wagon.http.retryHandler.count=3 -Dhttps.protocols=TLSv1.2 -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true"
+
+jobs:
+
+  publish_sparkutils_oss_2_12_18_and_2_13_12:
+    uses: sparkutils/building/.github/workflows/publish_build_3.yml@main
+    with:
+      theMatrix: |
+        {
+          "profile": ["Spark351", "Spark342", "Spark332"],
+          "scala": ["scala_2.12.18","scala_2.13.12"],
+          "third": ["sparkutils-0.17.0-3.5","sparkutils-0.17.0-3.4","sparkutils-0.17.0-3.3"]
+        }
+    secrets: inherit
+
+  publish_sparkutils_oss_2_12_10_and_2_13_5_unsupported:
+    uses: sparkutils/building/.github/workflows/publish_build_3.yml@main
+    with:
+      theMatrix: |
+        {
+          "profile": ["Spark321", "Spark32"],
+          "scala": ["scala_2.12.10","scala_2.13.5"],
+          "third": ["sparkutils-0.17.0-3.3"]
+        }
+    secrets: inherit
+
+  publish_sparkutils_oss_2_12_10:
+    uses: sparkutils/building/.github/workflows/publish_build_3.yml@main
+    with:
+      theMatrix: |
+        {
+          "profile": ["Spark3", "Spark313"],
+          "scala": ["scala_2.12.10"],
+          "third": ["sparkutils-0.17.0-3.3"]
+        }
+    secrets: inherit
+
+  publish_sparkutils_dbr_35:
+    uses: sparkutils/building/.github/workflows/publish_build_3.yml@main
+    with:
+      theMatrix: |
+        {
+          "profile": ["14.0.dbr", "14.3.dbr"],
+          "scala": ["scala_2.12.15"],
+          "third": ["sparkutils-0.17.0-3.5"]
+        }
+    secrets: inherit
+
+  publish_sparkutils_dbr_34:
+    uses: sparkutils/building/.github/workflows/publish_build_3.yml@main
+    with:
+      theMatrix: |
+        {
+          "profile": ["13.1.dbr", "13.3.dbr"],
+          "scala": ["scala_2.12.15"],
+          "third": ["sparkutils-0.17.0-3.4"]
+        }
+    secrets: inherit
+
+  publish_sparkutils_dbr_33:
+    uses: sparkutils/building/.github/workflows/publish_build_3.yml@main
+    with:
+      theMatrix: |
+        {
+          "profile": ["11.3.dbr", "12.2.dbr"],
+          "scala": ["scala_2.12.15"],
+          "third": ["sparkutils-0.17.0-3.3"]
+        }
+    secrets: inherit
+
+  # unsupported versions
+  publish_sparkutils_dbr_10_4_unsupported:
+    uses: sparkutils/building/.github/workflows/publish_build_3.yml@main
+    with:
+      theMatrix: |
+        {
+          "profile": ["10.4.dbr"],
+          "scala": ["scala_2.12.15"],
+          "third": ["sparkutils-0.17.0-3.3"]
+        }
+    secrets: inherit
+
+  publish_sparkutils_dbr_9_1_unsupported:
+    uses: sparkutils/building/.github/workflows/publish_build_3.yml@main
+    with:
+      theMatrix: |
+        {
+          "profile": ["9.1.dbr"],
+          "scala": ["scala_2.12.10"],
+          "third": ["sparkutils-0.17.0-3.3"]
+        }
+    secrets: inherit

@@ -125,6 +125,7 @@
                 <jacksonVersion>2.12.1</jacksonVersion>
                 <guavaVersion>15.0</guavaVersion> <!-- databricks runtime version -->
                 <refinedVersion>0.9.28</refinedVersion>
+                <scalatestVersion>3.2.0</scalatestVersion>
             </properties>
         </profile>
         <profile>
@@ -136,6 +137,7 @@
                 <jacksonVersion>2.12.1</jacksonVersion> <!-- scalameter dependency is 2.9.10 so perf tests runs need to change it -->
                 <guavaVersion>15.0</guavaVersion> <!-- databricks runtime version -->
                 <refinedVersion>0.9.28</refinedVersion>
+                <scalatestVersion>3.2.0</scalatestVersion>
             </properties>
         </profile>
         <profile>
@@ -298,6 +300,26 @@
                 <framelessCoreCompatVersion>_3.5</framelessCoreCompatVersion>
             </properties>
         </profile>
+        <profile>
+            <id>sparkutils-0.17.0-3.4</id>
+            <properties>
+                <framelessVersion>0.17.0-SNAPSHOT</framelessVersion>
+                <framelessRuntime>sparkutils_0.17.0-3.4</framelessRuntime>
+                <framelessOrg>com.sparkutils</framelessOrg>
+                <framelessCompatVersion>_3.4</framelessCompatVersion>
+                <framelessCoreCompatVersion>_3.4</framelessCoreCompatVersion>
+            </properties>
+        </profile>
+        <profile>
+            <id>sparkutils-0.17.0-3.3</id>
+            <properties>
+                <framelessVersion>0.17.0-SNAPSHOT</framelessVersion>
+                <framelessRuntime>sparkutils_0.17.0-3.3</framelessRuntime>
+                <framelessOrg>com.sparkutils</framelessOrg>
+                <framelessCompatVersion>_3.3</framelessCompatVersion>
+                <framelessCoreCompatVersion>_3.3</framelessCoreCompatVersion>
+            </properties>
+        </profile>
     </profiles>
 
     <properties>
@@ -342,14 +364,14 @@
 
         <framelessCoreCompatVersion></framelessCoreCompatVersion>
     </properties>
-<!--
+
     <repositories>
         <repository>
             <id>mvn_snapshots</id>
             <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
     </repositories>
--->
+
     <distributionManagement>
         <repository>
             <id>ossrh</id>
