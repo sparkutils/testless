@@ -20,7 +20,7 @@ jobs:
     with:
       theMatrix: |
         {
-          "profile": ["Spark351", "Spark342", "Spark332"],
+          "profile": ["Spark350", "Spark341", "Spark332"],
           "scala": ["scala_2.12.18","scala_2.13.12"],
           "third": ["sparkutils-0.17.0-3.5","sparkutils-0.17.0-3.4","sparkutils-0.17.0-3.3"]
         }
