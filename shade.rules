@@ -1,0 +1,6 @@
+rule org.scalatest.** testless.org.scalatest.@1
+rule org.scalatestplus.** testless.org.scalatestplus.@1
+rule org.scalactic.** testless.org.scalactic.@1
+rule org.scalacheck.** testless.org.scalacheck.@1
+rule cats.** testless.cats.@1
+rule shapeless.** testless.shapeless.@1

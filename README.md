@@ -66,6 +66,32 @@ com.sparkutils.testless.Testless.testFrameless(batchnumber)
 
 Use runFramelessTestName with a single fqn test name or testFrameless(String[]) with additional args and all tests.  Or replace all the running args (not advised as it will attempt gui usage) with scalaTestRunner. 
 
+### I'd really like to run some checks to debug
+
+You need to import from the shaded testless package and define an implicit position, the macro (although a lot is changed by the awesome [jarjar-abrams](https://github.com/eed3si9n/jarjar-abrams) returns org.scalactic.source.Position).
+
+```scala
+import frameless.arbBigDecimal
+
+import testless.org.scalacheck.Arbitrary
+import testless.org.scalacheck.Gen
+import testless.org.scalatestplus.scalacheck.Checkers.check
+import testless.org.scalacheck.Prop
+import testless.org.scalacheck.Prop.forAll
+
+def prop[A](xs: List[A]): Prop = {
+if (xs.size > 0){
+println(xs.head)
+}
+xs.size > -1
+}
+
+// a position must be defined as the macro isn't shaded fully
+implicit val p: testless.org.scalactic.source.Position = testless.org.scalactic.source.Position("","",13)
+
+check(forAll(prop[BigDecimal] _))
+```
+
 ## Why do this?
 
 If you are attempting to run some Frameless based code on a DBR and it doesn't work, you can run the official test suite against that DBR version (or indeed in advance). Frameless' test coverage is very high, so it's likely one of four outcomes:

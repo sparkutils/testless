@@ -5,7 +5,7 @@
     <groupId>com.sparkutils</groupId>
     <artifactId>testless_${framelessRuntime}_${shimRuntime}_${sparkCompatVersion}_${scalaCompatVersion}</artifactId>
 
-    <version>0.0.1-RC2</version>
+    <version>0.0.1-RC3</version>
     <name>Frameless Test Pack</name>
     <description>Packaged tests and shaded jar for deploying in Databricks, or similar to verify builds still run</description>
     <url>https://sparkutils.github.io/frameless/</url>
@@ -60,7 +60,6 @@
             <properties>
                 <scalaVersion>2.13.5</scalaVersion>
                 <scalaCompatVersion>2.13</scalaCompatVersion>
-                <scalatestVersion>3.0.8</scalatestVersion>
             </properties>
         </profile>
         <profile>
@@ -68,7 +67,6 @@
             <properties>
                 <scalaVersion>2.13.12</scalaVersion>
                 <scalaCompatVersion>2.13</scalaCompatVersion>
-                <scalatestVersion>3.0.8</scalatestVersion>
             </properties>
         </profile>
         <profile>
@@ -125,7 +123,6 @@
                 <jacksonVersion>2.12.1</jacksonVersion>
                 <guavaVersion>15.0</guavaVersion> <!-- databricks runtime version -->
                 <refinedVersion>0.9.28</refinedVersion>
-                <scalatestVersion>3.2.0</scalatestVersion>
             </properties>
         </profile>
         <profile>
@@ -137,7 +134,6 @@
                 <jacksonVersion>2.12.1</jacksonVersion> <!-- scalameter dependency is 2.9.10 so perf tests runs need to change it -->
                 <guavaVersion>15.0</guavaVersion> <!-- databricks runtime version -->
                 <refinedVersion>0.9.28</refinedVersion>
-                <scalatestVersion>3.2.0</scalatestVersion>
             </properties>
         </profile>
         <profile>
@@ -160,7 +156,6 @@
                 <jacksonVersion>2.13.5</jacksonVersion> <!-- scalameter dependency is 2.9.10 so perf tests runs need to change it -->
                 <guavaVersion>15.0</guavaVersion> <!-- databricks runtime version -->
                 <refinedVersion>0.9.28</refinedVersion>
-                <scalatestVersion>3.2.0</scalatestVersion>
             </properties>
         </profile>
         <profile>
@@ -183,7 +178,6 @@
                 <jacksonVersion>2.14.2</jacksonVersion> <!-- scalameter dependency is 2.9.10 so perf tests runs need to change it -->
                 <guavaVersion>15.0</guavaVersion> <!-- databricks runtime version -->
                 <refinedVersion>0.9.28</refinedVersion>
-                <scalatestVersion>3.2.0</scalatestVersion>
             </properties>
         </profile>
         <profile>
@@ -228,7 +222,6 @@
                 <jacksonVersion>2.15.2</jacksonVersion> <!-- scalameter dependency is 2.9.10 so perf tests runs need to change it -->
                 <guavaVersion>15.0</guavaVersion> <!-- databricks runtime version -->
                 <refinedVersion>0.9.28</refinedVersion>
-                <scalatestVersion>3.2.0</scalatestVersion>
             </properties>
         </profile>
         <profile>
@@ -240,7 +233,6 @@
                 <jacksonVersion>2.15.2</jacksonVersion> <!-- scalameter dependency is 2.9.10 so perf tests runs need to change it -->
                 <guavaVersion>15.0</guavaVersion> <!-- databricks runtime version -->
                 <refinedVersion>0.9.28</refinedVersion>
-                <scalatestVersion>3.2.0</scalatestVersion>
             </properties>
         </profile>
         <profile>
@@ -342,7 +334,7 @@
         <scalaCompilerPluginVersion>4.8.0</scalaCompilerPluginVersion>
         <mavenCompilerPluginVersion>3.8.1</mavenCompilerPluginVersion>
         <mavenJarPluginVersion>3.2.0</mavenJarPluginVersion>
-        <mavenShadePluginVersion>3.2.1</mavenShadePluginVersion>
+        <mavenShadePluginVersion>3.5.2</mavenShadePluginVersion>
         <mavenSitePluginVersion>3.7.1</mavenSitePluginVersion>
         <mavenProjectInfoReportsVersion>3.0.0</mavenProjectInfoReportsVersion>
         <surefirePluginVersion>2.22.2</surefirePluginVersion>
@@ -366,6 +358,8 @@
         <scalacheckEffectVersion>1.0.4</scalacheckEffectVersion>
         <scalacticVersion>3.2.18</scalacticVersion>
 
+        <jarjarVersion>1.14.0</jarjarVersion>
+        <scriptingPluginVersion>3.0.0</scriptingPluginVersion>
         <framelessCoreCompatVersion></framelessCoreCompatVersion>
     </properties>
 
@@ -510,31 +504,47 @@
         </dependency>
 
         <!-- frameless test dependencies -->
-        <dependency>
-            <groupId>org.scalatest</groupId>
-            <artifactId>scalatest_${scalaCompatVersion}</artifactId>
-            <version>${scalatestVersion}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.scalatest</groupId>
-            <artifactId>scalatest-shouldmatchers_${scalaCompatVersion}</artifactId>
-            <version>${scalatestVersion}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.scalatestplus</groupId>
-            <artifactId>scalatestplus-scalacheck_${scalaCompatVersion}</artifactId>
-            <version>${scalatestPlusVersion}</version>
-        </dependency>
 
         <dependency>
             <groupId>org.scalacheck</groupId>
             <artifactId>scalacheck_${scalaCompatVersion}</artifactId>
             <version>${scalaCheckVersion}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.scalatest</groupId>
+            <artifactId>scalatest_${scalaCompatVersion}</artifactId>
+            <version>${scalatestVersion}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.scalatest</groupId>
+            <artifactId>scalatest-shouldmatchers_${scalaCompatVersion}</artifactId>
+            <version>${scalatestVersion}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.scalatestplus</groupId>
+            <artifactId>scalatestplus-scalacheck_${scalaCompatVersion}</artifactId>
+            <version>${scalatestPlusVersion}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.scalacheck</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
         <dependency>
             <groupId>org.typelevel</groupId>
             <artifactId>scalacheck-effect_2.12</artifactId>
             <version>${scalacheckEffectVersion}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.scalacheck</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -654,6 +664,8 @@
                                     </excludes>
                                 </filter>
                             </filters>
+                            <!--
+                            these just don't work properly ScalaSig probably
                             <relocations>
                                 <relocation>
                                     <pattern>org.scalatest</pattern>
@@ -676,9 +688,47 @@
                                     <shadedPattern>testless.shapeless</shadedPattern>
                                 </relocation>
                             </relocations>
+                            -->
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-scripting-plugin</artifactId>
+                <version>${scriptingPluginVersion}</version>
+                <executions>
+                    <execution>
+                        <id>jarjarCaller</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>eval</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <engineName>groovy</engineName>
+                    <script>
+                        def ogFile = project.getArtifact().getFile()
+                        def targetDir = ogFile.getParentFile()
+                        def shaded = new java.io.File(targetDir, "shaded-" + ogFile.getName())
+                        org.codehaus.plexus.util.FileUtils.rename(ogFile, shaded)
+                        new com.eed3si9n.jarjarabrams.Main().process((new java.io.File("./shade.rules")).toPath(), shaded.toPath(), ogFile.toPath())
+                    </script>
+                </configuration>
+                <dependencies>
+                    <!-- ScriptEngines -->
+                    <dependency>
+                        <groupId>org.codehaus.groovy</groupId>
+                        <artifactId>groovy-jsr223</artifactId>
+                        <version>3.0.7</version> <!-- look for latest -->
+                    </dependency>
+                    <dependency>
+                        <groupId>com.eed3si9n.jarjarabrams</groupId>
+                        <artifactId>jarjar-abrams-core_${scalaCompatVersion}</artifactId>
+                        <version>${jarjarVersion}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
