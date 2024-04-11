@@ -5,7 +5,7 @@
     <groupId>com.sparkutils</groupId>
     <artifactId>testless_${framelessRuntime}_${shimRuntime}_${sparkCompatVersion}_${scalaCompatVersion}</artifactId>
 
-    <version>0.0.1-RC4</version>
+    <version>0.0.1-RC5</version>
     <name>Frameless Test Pack</name>
     <description>Packaged tests and shaded jar for deploying in Databricks, or similar to verify builds still run</description>
     <url>https://sparkutils.github.io/frameless/</url>
@@ -289,7 +289,7 @@
         <profile>
             <id>sparkutils-0.17.0-3.5</id>
             <properties>
-                <framelessVersion>0.17.0-RC2</framelessVersion>
+                <framelessVersion>0.17.0-RC3</framelessVersion>
                 <framelessRuntime>sparkutils_0.17.0-3.5</framelessRuntime>
                 <framelessOrg>com.sparkutils</framelessOrg>
                 <framelessCompatVersion>_3.5</framelessCompatVersion>
@@ -299,7 +299,7 @@
         <profile>
             <id>sparkutils-0.17.0-3.4</id>
             <properties>
-                <framelessVersion>0.17.0-RC2</framelessVersion>
+                <framelessVersion>0.17.0-RC3</framelessVersion>
                 <framelessRuntime>sparkutils_0.17.0-3.4</framelessRuntime>
                 <framelessOrg>com.sparkutils</framelessOrg>
                 <framelessCompatVersion>_3.4</framelessCompatVersion>
@@ -309,7 +309,7 @@
         <profile>
             <id>sparkutils-0.17.0-3.3</id>
             <properties>
-                <framelessVersion>0.17.0-RC2</framelessVersion>
+                <framelessVersion>0.17.0-RC3</framelessVersion>
                 <framelessRuntime>sparkutils_0.17.0-3.3</framelessRuntime>
                 <framelessOrg>com.sparkutils</framelessOrg>
                 <framelessCompatVersion>_3.3</framelessCompatVersion>
