@@ -71,26 +71,43 @@ Use runFramelessTestName with a single fqn test name or testFrameless(String[]) 
 You need to import from the shaded testless package and define an implicit position, the macro (although a lot is changed by the awesome [jarjar-abrams](https://github.com/eed3si9n/jarjar-abrams) returns org.scalactic.source.Position).
 
 ```scala
-import frameless.arbBigDecimal
+import frameless._
 
 import testless.org.scalacheck.Arbitrary
 import testless.org.scalacheck.Gen
 import testless.org.scalatestplus.scalacheck.Checkers.check
 import testless.org.scalacheck.Prop
+import testless.org.scalacheck.Prop._
 import testless.org.scalacheck.Prop.forAll
 
-def prop[A](xs: List[A]): Prop = {
-if (xs.size > 0){
-println(xs.head)
-}
-xs.size > -1
-}
-
-// a position must be defined as the macro isn't shaded fully
+// a position must be defined as the macro isn't shaded fully - see https://github.com/sbt/sbt-assembly/issues/477
 implicit val p: testless.org.scalactic.source.Position = testless.org.scalactic.source.Position("","",13)
 
-check(forAll(prop[BigDecimal] _))
+implicit val sess = spark
+implicit val sparkDelay: SparkDelay[Job] = Job.framelessSparkDelayForJob
+
+import frameless.functions.aggregate.last
+
+def prop[A: TypedEncoder: Ordering: CatalystOrdered](xs: List[A]): Prop = {
+  val dataset = TypedDataset.create(xs.map(X1(_)))
+  val A = dataset.col[A]('a)
+  // servers do not return the same order told to
+  val sxs = xs.sorted
+
+  val datasetLast = dataset
+    .orderBy(A: SortedTypedColumn[X1[A], A])
+    .agg(last(A))
+    .collect()
+    .run()
+    .toList
+
+  datasetLast ?= sxs.lastOption.toList
+}
+
+check(prop[String](List("","")))
 ```
+
+_NB_ As of RC7 shapeless is no longer shaded (per 477) allowing encoder derivation
 
 ## Why do this?
 
