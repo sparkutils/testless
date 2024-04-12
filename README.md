@@ -118,6 +118,8 @@ The Databricks Community Edition is effectively a small box running local[*] and
 
 Additionally, the behaviour of different Databricks Runtime versions can trigger issues on previously working tests.  Version 0.0.1-RC7 (based upon sparkutils frameless 0.17 RC4) for instance failed on tests involving orderBy and first/last aggregations when running on 15.0 as it optimised with Photon rather than normal OSS.  If it looks like this is happening on a test or usage please try .coalesce(1) before sorting/aggregating as well before raising an issue.
 
+On some runs the tolerance for covar_pop/covar_samp et al or the cube/rollup functions may need tweaking.  A number of runs on 14.3/15 have shown differences of a couple of hundred in the end result, given the test cases are generated it's entirely possible simply re-running may be enough.
+
 ## Why do this?
 
 If you are attempting to run some Frameless based code on a DBR and it doesn't work, you can run the official test suite against that DBR version (or indeed in advance). Frameless' test coverage is very high, so it's likely one of four outcomes:
@@ -144,6 +146,8 @@ The shaded jars are on mvn central, get a Databricks community edition account a
 If you get different results please raise a PR to update the Tested Combos table below.
 
 ## Tested Combos
+
+Test runs are noted as "All tests passed" when no code changes to the tests are required to run.  Per the note above on generated test values, it's possible to have a test randomly fail, if re-running it directly (e.g. either via the test class or copy and pasting the actual test) runs successfully this is included. 
 
 **NOTE:**  Please ensure an appropriate version combination is used in your applications.  Some of these combinations **cannot** be recommended for use even if the tests pass, for example using base oss build which is different to that of a DBR, known to be worrisome combos will have something in the Notes column.  Good test results are for information only and do not represent "support" from the frameless community.      
 
