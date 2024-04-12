@@ -1,0 +1,25 @@
+# Only does a publish step, no tests are run
+name: Publishes Only
+
+on:
+  push:
+    branches: [ "publishOnly" ]
+
+env:
+  MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
+  MAVEN_CLI_TESTSHADES_OPTS: "-f testShades/pom.xml --batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
+  # -Dmaven.repo.local=.m2/repository not needed on github, seems ~/.m2 is supported / expected
+  MAVEN_OPTS: "-Xms1g -Xmx4g -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.http.retryHandler.class=standard -Dmaven.wagon.http.retryHandler.count=3 -Dhttps.protocols=TLSv1.2 -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true"
+
+jobs:
+
+  publish_sparkutils_dbr_35:
+    uses: sparkutils/building/.github/workflows/publish_build_3.yml@main
+    with:
+      theMatrix: |
+        {
+          "profile": ["14.3.dbr"],
+          "scala": ["scala_2.12.15"],
+          "third": ["sparkutils-0.17.0-3.5"]
+        }
+    secrets: inherit
