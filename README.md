@@ -55,6 +55,11 @@ If there are class cast or classnotfounds's etc. please raise an issue describin
 If a batch fails with a cluster death or driver restart, you can attempt by using:
 
 ```scala
+/* On Fabric Java's System.out is not redirected/captured (Scala's Console.out is), uncomment as needed
+// in case it's needed again 
+val ogSysOut = System.out
+System.setOut(Console.out)
+ */
 // closing is by default and restarts the driver on the 
 frameless.setShouldCloseSession(false)
 frameless.setOutputDir("testoutputPath")
